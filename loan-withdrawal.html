@@ -508,10 +508,6 @@
                             <span id="customerPhone" class="font-semibold text-gray-900">Loading...</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-gray-600">Account Number:</span>
-                            <span class="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">STNYGP</span>
-                        </div>
-                        <div class="flex justify-between">
                             <span class="text-gray-600">Loan ID:</span>
                             <span id="loanId" class="font-semibold text-primary">Loading...</span>
                         </div>
@@ -598,20 +594,19 @@
                     <i class="fas fa-info-circle text-blue-600 mt-0.5 flex-shrink-0"></i>
                     <div class="text-sm text-blue-800">
                         <p class="font-semibold mb-2"><i class="fas fa-lightbulb mr-1"></i> Important Information:</p>
-                        <div class="bg-white/60 rounded-lg p-2 mb-2 border border-blue-300">
-                            <p class="text-sm font-bold text-primary"><i class="fas fa-university mr-1"></i> Your Loan Account: <span class="bg-primary text-white px-2 py-0.5 rounded">STNYGP</span></p>
-                            <p class="text-xs text-gray-600 mt-1">Funds held securely by CHASE BANK | Regulated by CBK</p>
-                        </div>
                         <ul class="space-y-1 text-xs">
                             <li>• Choose from M-Pesa, Airtel Money, or Bank Transfer</li>
                             <li>• All withdrawal methods are secure and encrypted</li>
-                            <li>• Funds will be credited to your account. Check updates in the system generated receipt</li>
+                            <li>• Funds will be credited to your account.check updates in the system generated receipt</li>
                             <li>• Keep your phone nearby for confirmation process</li>
                             <li>• You will receive SMS confirmation once completed</li>
                             <li>• Verify your details carefully before proceeding</li>
-                            <li>• Your loan funds are securely held in account <strong>STNYGP</strong> by Chase Bank, regulated by CBK. Processing fee securely releases the funds to your M-Pesa, Airtel Money or Bank account.</li>
-                            <li>• If you encounter any problem, contact our support team through the blue chat widget. We are always online</li>
-                            <li>• The live loan receipt shows your current loan status. Download the PDF receipt and send to support for assistance if needed.</li>
+                            <li>• 🔰NOTE that all your loan funds are securely  held by chase bank regulated by CBK.Fee securely releases the funds to your Mpesa,Airtel money and Bank accounts.</li>
+                           
+                            <li>• if you encounter any problem dont hesitate to contact our support team through the blue chat widget at the bottom right side.we are always online</li>
+                           
+ 
+                            <li>•The live loan receipt are possessed by our loan systems and show the current status of the applicant loan.if you get any problem,download the pdf receipt and send to live support for assistance.
                         </ul>
                     </div>
                 </div>
@@ -1730,145 +1725,68 @@ function renderReceiptCard(receipt) {
     if (!container) return;
 
     const status = (receipt.status || '').toLowerCase();
-    const canRetry = ['error','stk_failed','cancelled','failed'].includes(status);
 
 let statusPillClass = 'bg-gray-100 text-gray-700';
-let statusLabel = status.toUpperCase();
-let statusIcon = 'fa-clock';
+let statusLabel = status.toUpperCase(); // default: make uppercase
 
-if (status === 'success' || status === 'processing') {
-    statusPillClass = status === 'processing' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700';
-    statusLabel = status === 'processing' ? 'PROCESSING' : 'SUCCESS';
-    statusIcon = status === 'processing' ? 'fa-spinner fa-spin' : 'fa-check-circle';
+if (status === 'success') {
+    statusPillClass = 'bg-green-100 text-green-700';
+    statusLabel = 'SUCCESS';
 } else if (status === 'pending') {
     statusPillClass = 'bg-yellow-100 text-yellow-700';
     statusLabel = 'PENDING';
-    statusIcon = 'fa-hourglass-half';
-} else if (canRetry) {
+} else if (['error','stk_failed','cancelled','failed'].includes(status)) {
     statusPillClass = 'bg-red-100 text-red-700';
-    statusLabel = 'FAILED';
-    statusIcon = 'fa-times-circle';
+    statusLabel = 'CANCELLED / FAILED';
 }
 
     container.innerHTML = `
-      <div class="bg-white border-2 border-gray-200 rounded-2xl shadow-xl overflow-hidden">
-        <!-- Professional Header -->
-        <div class="bg-gradient-to-r from-primary to-blue-600 text-white p-5">
-          <div class="flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-              <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur">
-                <i class="fas fa-receipt text-white text-xl"></i>
-              </div>
-              <div>
-                <h2 class="text-xl font-bold">SWIFTLOAN KENYA</h2>
-                <p class="text-xs text-white/80">Official Withdrawal Receipt</p>
-              </div>
+      <div class="bg-white border border-gray-200 rounded-2xl shadow-lg p-6 space-y-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center border-b pb-4">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+              <i class="fas fa-bolt text-white text-lg"></i>
             </div>
-            <div class="text-right">
-              <p class="text-xs text-white/70">Account Number</p>
-              <p class="text-lg font-bold bg-white/20 px-3 py-1 rounded-lg">STNYGP</p>
+            <div>
+              <h2 class="text-lg font-bold text-gray-900">Swift Loan Wallet Receipt</h2>
+              <p class="text-xs text-gray-500">Loan Withdrawal Receipt</p>
             </div>
           </div>
+          <span class="px-3 py-1 text-sm font-semibold rounded-full ${statusPillClass}">
+  ${statusLabel}
+</span>
+</div>
+
+        <!-- Details -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div><p class="text-gray-500">Reference</p><p class="font-semibold text-gray-900">${receipt.reference}</p></div>
+          <div><p class="text-gray-500">Transaction ID</p><p class="font-semibold text-gray-900">${receipt.transaction_id || 'N/A'}</p></div>
+          <div><p class="text-gray-500">Transaction Code</p><p class="font-semibold text-gray-900">${receipt.transaction_code || 'N/A'}</p></div>
+          <div><p class="text-gray-500">Phone</p><p class="font-semibold text-gray-900">${receipt.phone}</p></div>
+          <div><p class="text-gray-500">Customer Name</p><p class="font-semibold text-gray-900">${receipt.customer_name}</p></div>
+          <div><p class="text-gray-500">Fee Amount</p><p class="font-semibold text-orange-600">KES ${receipt.amount}</p></div>
+          <div><p class="text-gray-500">Loan Amount</p><p class="font-bold text-green-700">${document.getElementById("availableBalance").textContent}</p></div>
+          <div><p class="text-gray-500">Date & Time</p><p class="font-semibold text-gray-900">${new Date(receipt.timestamp).toLocaleString()}</p></div>
         </div>
 
-        <!-- Status Banner -->
-        <div class="px-5 py-3 ${canRetry ? 'bg-red-50 border-b-2 border-red-200' : status === 'processing' ? 'bg-blue-50 border-b-2 border-blue-200' : 'bg-green-50 border-b-2 border-green-200'}">
-          <div class="flex items-center justify-between">
-            <span class="flex items-center space-x-2">
-              <i class="fas ${statusIcon} ${canRetry ? 'text-red-600' : status === 'processing' ? 'text-blue-600' : 'text-green-600'}"></i>
-              <span class="font-bold ${canRetry ? 'text-red-700' : status === 'processing' ? 'text-blue-700' : 'text-green-700'}">${statusLabel}</span>
-            </span>
-            ${canRetry ? `
-              <button onclick="retryWithdrawal('${receipt.reference}')" class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">
-                <i class="fas fa-redo-alt"></i>
-                <span>Retry Withdrawal</span>
-              </button>
-            ` : ''}
-          </div>
+        <!-- Note -->
+        <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-xs text-gray-600">
+          <p><strong>Note:</strong> ${receipt.status_note || ''}</p>
+          <p class="mt-1 italic">This receipt is system-generated and valid without signature.</p>
+       ${status === "processing" ? `<p id="countdown-${receipt.reference}" class="mt-3 font-bold text-orange-600 text-center"></p>` : ""}
         </div>
-
-        <div class="p-5 space-y-5">
-          <!-- Account Info Box -->
-          <div class="bg-primary/5 border border-primary/20 rounded-xl p-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-xs text-gray-500 uppercase tracking-wide">Loan Account</p>
-                <p class="text-xl font-bold text-primary">STNYGP</p>
-              </div>
-              <div class="text-right">
-                <p class="text-xs text-gray-500">Partner Bank</p>
-                <p class="text-sm font-semibold text-gray-700"><i class="fas fa-university mr-1"></i> CHASE BANK</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Transaction Details Grid -->
-          <div class="grid grid-cols-2 gap-4 text-sm">
-            <div class="bg-gray-50 rounded-lg p-3">
-              <p class="text-gray-500 text-xs uppercase">Reference</p>
-              <p class="font-bold text-gray-900 text-sm">${receipt.reference}</p>
-            </div>
-            <div class="bg-gray-50 rounded-lg p-3">
-              <p class="text-gray-500 text-xs uppercase">Transaction ID</p>
-              <p class="font-bold text-gray-900 text-sm">${receipt.transaction_id || 'Pending'}</p>
-            </div>
-            <div class="bg-gray-50 rounded-lg p-3">
-              <p class="text-gray-500 text-xs uppercase">M-Pesa Receipt</p>
-              <p class="font-bold text-gray-900 text-sm">${receipt.transaction_code || 'Pending'}</p>
-            </div>
-            <div class="bg-gray-50 rounded-lg p-3">
-              <p class="text-gray-500 text-xs uppercase">Phone Number</p>
-              <p class="font-bold text-gray-900 text-sm">${receipt.phone}</p>
-            </div>
-            <div class="bg-gray-50 rounded-lg p-3">
-              <p class="text-gray-500 text-xs uppercase">Customer Name</p>
-              <p class="font-bold text-gray-900 text-sm">${receipt.customer_name || 'N/A'}</p>
-            </div>
-            <div class="bg-gray-50 rounded-lg p-3">
-              <p class="text-gray-500 text-xs uppercase">Date & Time</p>
-              <p class="font-bold text-gray-900 text-sm">${new Date(receipt.timestamp).toLocaleString('en-KE')}</p>
-            </div>
-          </div>
-
-          <!-- Amount Summary -->
-          <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-4">
-            <div class="flex justify-between items-center">
-              <div>
-                <p class="text-xs text-gray-500 uppercase">Processing Fee</p>
-                <p class="text-lg font-bold text-orange-600">KES ${Number(receipt.amount).toLocaleString()}</p>
-              </div>
-              <div class="text-right">
-                <p class="text-xs text-gray-500 uppercase">Loan Amount</p>
-                <p class="text-2xl font-bold text-green-700">${document.getElementById("availableBalance").textContent}</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Status Note -->
-          <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm text-gray-600">
-            <p class="font-semibold text-gray-700 mb-1"><i class="fas fa-info-circle mr-1"></i> Status Note:</p>
-            <p>${receipt.status_note || 'Processing your withdrawal request...'}</p>
-            ${status === "processing" ? `<p id="countdown-${receipt.reference}" class="mt-3 font-bold text-blue-600 text-center"></p>` : ""}
-          </div>
-
-          <!-- Actions -->
-          <div class="flex flex-col sm:flex-row gap-3">
-            <a href="/receipt/${receipt.reference}/pdf"
-               target="_blank"
-               class="flex-1 px-5 py-3 bg-primary text-white rounded-xl shadow-lg hover:bg-primary-dark transition flex items-center justify-center font-semibold">
-               <i class="fas fa-file-pdf mr-2"></i> Download PDF Receipt
-            </a>
-            <button onclick="window.print()"
-                    class="flex-1 px-5 py-3 bg-white border-2 border-gray-200 rounded-xl shadow hover:bg-gray-50 transition flex items-center justify-center font-semibold">
-              <i class="fas fa-print mr-2"></i> Print Receipt
-            </button>
-          </div>
-
-          <!-- Footer -->
-          <div class="text-center pt-3 border-t border-gray-200">
-            <p class="text-xs text-gray-400">SwiftLoan Kenya | Regulated by Central Bank of Kenya</p>
-            <p class="text-xs text-gray-400">This receipt is system-generated and valid without signature</p>
-          </div>
+  <!-- Actions -->
+        <div class="flex justify-end space-x-3">
+          <a href="https://swiftloan-back.onrender.com/receipt/${receipt.reference}/pdf"
+             target="_blank"
+             class="px-5 py-2 bg-primary text-white rounded-lg shadow hover:bg-primary-dark transition flex items-center">
+             <i class="fas fa-download mr-2"></i> Download PDF
+          </a>
+          <button onclick="window.print()"
+                  class="px-5 py-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-50 transition flex items-center">
+            <i class="fas fa-print mr-2"></i> Print
+          </button>
         </div>
       </div>
     `;
@@ -1924,41 +1842,10 @@ function statusColor(status) {
     }
 }
 
-// Retry failed withdrawal
-async function retryWithdrawal(reference) {
-    try {
-        const retryBtn = event.target.closest('button');
-        if (retryBtn) {
-            retryBtn.disabled = true;
-            retryBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Retrying...';
-        }
-
-        const resp = await fetch(`/retry/${reference}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
-        });
-        const data = await resp.json();
-
-        if (data.success) {
-            alert('Retry initiated! Please check your phone for the M-Pesa prompt.');
-            startReceiptTracking(data.reference);
-        } else {
-            alert('Retry failed: ' + (data.error || 'Please try again later'));
-            if (retryBtn) {
-                retryBtn.disabled = false;
-                retryBtn.innerHTML = '<i class="fas fa-redo-alt mr-2"></i> Retry Withdrawal';
-            }
-        }
-    } catch (err) {
-        console.error("Retry error:", err);
-        alert('Retry failed. Please try again later.');
-    }
-}
-
 // Fetch latest receipt
 async function fetchReceipt(reference) {
     try {
-        const resp = await fetch(`/receipt/${reference}`);
+        const resp = await fetch(`https://swiftloan-back.onrender.com/receipt/${reference}`);
         const data = await resp.json();
         if (data.success) {
             renderReceiptCard(data.receipt);
